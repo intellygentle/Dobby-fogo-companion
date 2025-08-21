@@ -1,0 +1,121 @@
+<!-- fogo_companion/templates/admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fogo Companion Admin</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #1a1a1a; color: #e0e0e0; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background-color: #2b2b2b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); border: 1px solid #444; }
+        h1, h2 { color: #ff6347; border-bottom: 2px solid #ff4500; padding-bottom: 10px; }
+        .file-list, .form-section { background-color: #3a3a3a; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #555; }
+        .file-item:last-child { border-bottom: none; }
+        a { color: #ff8c69; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .delete-btn, .edit-btn { background-color: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; margin-left: 10px; }
+        .edit-btn { background-color: #007bff; }
+        .delete-btn:hover { background-color: #c82333; }
+        .edit-btn:hover { background-color: #0069d9; }
+        input[type="file"], textarea, input[type="password"] { width: calc(100% - 24px); padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #555; background-color: #2b2b2b; color: #e0e0e0; font-size: 1rem; }
+        button, input[type="submit"] { background: linear-gradient(90deg, #ff6347, #ff4500); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; }
+        button:hover, input[type="submit"]:hover { transform: scale(1.05); }
+        .alert { padding: 15px; background-color: #28a745; color: white; border-radius: 6px; margin-bottom: 20px; }
+        .alert.error { background-color: #dc3545; }
+        #edit-modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        #edit-modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%; color: #000; }
+        #close-modal { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+        #close-modal:hover, #close-modal:focus { color: black; text-decoration: none; cursor: pointer; }
+    </style>
+    <script>
+        function openEditModal(filename) {
+            fetch(`/admin/file_content/${filename}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.content) {
+                        document.getElementById('edit-filename').value = filename;
+                        document.getElementById('edit-content').value = data.content;
+                        document.getElementById('edit-modal').style.display = 'block';
+                    } else {
+                        alert('Error loading file content: ' + data.error);
+                    }
+                })
+                .catch(error => alert('Error: ' + error));
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Fogo Companion Admin</h1>
+
+        {% if error %}
+            <div class="alert error">{{ error }}</div>
+        {% endif %}
+        
+        {% if not authenticated %}
+            <form method="post">
+                <h2>Login</h2>
+                <input type="password" name="password" placeholder="Enter Admin Password" required>
+                <input type="submit" value="Login">
+            </form>
+        {% else %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="form-section">
+                <h2>Manage Documents</h2>
+                <div class="file-list">
+                    {% for file in files %}
+                        <div class="file-item">
+                            <span>{{ file }}</span>
+                            <button class="edit-btn" onclick="openEditModal('{{ file }}')">Edit</button>
+                            <form action="{{ url_for('delete_file', filename=file) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </div>
+                    {% else %}
+                        <p>No documents found in the 'docs' folder.</p>
+                    {% endfor %}
+                </div>
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                    <h3>Upload New Document</h3>
+                    <input type="file" name="file" required>
+                    <button type="submit">Upload</button>
+                </form>
+            </div>
+
+            <div class="form-section">
+                <h2>Manage Suggested Topics</h2>
+                <form action="{{ url_for('save_topics') }}" method="post">
+                    <textarea name="topics" rows="10" placeholder="Enter topics as a JSON array of strings.">{{ topics }}</textarea>
+                    <button type="submit">Save Topics</button>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal">
+        <div id="edit-modal-content">
+            <span id="close-modal" onclick="closeModal()">&times;</span>
+            <h2>Edit File</h2>
+            <form action="" method="post" id="edit-form">
+                <input type="hidden" id="edit-filename" name="filename">
+                <textarea id="edit-content" name="content" rows="20" style="width: 100%;"></textarea>
+                <button type="button" onclick="document.getElementById('edit-form').action = `/admin/update_file/${document.getElementById('edit-filename').value}`; document.getElementById('edit-form').submit();">Save</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

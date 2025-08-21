@@ -1,0 +1,49 @@
+.vercel
+# Vercel
+.vercel
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Generated data
+vector_store/
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+*.env
+
+# Virtual environment folders
+venv/
+.venv/
+env/
+ENV/
+
+# Vercel and build artifacts
+.vercel/
+build/
+dist/
+*.egg-info/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and temp files
+*.log
+*.tmp
+tmp/
+*.sqlite3
+
+# Cache
+*.cache/
+.cache/

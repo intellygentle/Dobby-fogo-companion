@@ -1,0 +1,9 @@
+# fogo_companion/requirements.txt
+
+flask
+python-dotenv
+pypdf
+python-docx
+requests
+werkzeug
+gunicorn
