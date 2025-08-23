@@ -2,7 +2,7 @@
 
    ![Fogo Companion Interface](static/background.jpg)
 
-   Fogo Companion is an open-source, Telegram-style chatbot designed to educate users about the Fogo Chain ecosystem, a high-performance blockchain optimized for DeFi trading. Powered by Fireworks AI's language model, the bot answers questions about Fogo Chain, Ambient Finance, Maximal Extractable Value (MEV), oracles, and more, using a curated knowledge base of Markdown documents. It features a sleek web interface, real-time chat, and Twitter integration for sharing responses, making it ideal for retail traders, developers, and DeFi enthusiasts exploring Fogo Chain's testnet.
+   Fogo Companion is an open-source, Telegram-style chatbot designed to educate users about the Fogo Chain ecosystem, a high-performance blockchain optimized for DeFi trading. Powered by Sentient Dobby AI's language model, the bot answers questions about Fogo Chain, Ambient Finance, Maximal Extractable Value (MEV), oracles, and more, using a curated knowledge base of Markdown documents. It features a sleek web interface, real-time chat, and Twitter integration for sharing responses, making it ideal for retail traders, developers, and DeFi enthusiasts exploring Fogo Chain's testnet.
 
    ## Features
 
@@ -107,10 +107,11 @@
       - Click the "Tweet" button on bot responses to share them on Twitter.
 
    4. **Admin Interface**:
-      - Access `/admin` and log in with the `ADMIN_PASSWORD` to upload new documents or manage the knowledge base.
+      - Access admin and log in with the `ADMIN_PASSWORD` to upload new documents or manage the knowledge base.
+   
    5. **Dobby Usage**
-      ```
-       import requests
+ ```
+import requests
 import json
 
 url = "https://api.fireworks.ai/inference/v1/chat/completions"
