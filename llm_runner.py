@@ -60,4 +60,4 @@ def generate_answer(prompt: str, api_key: str) -> str:
     except Exception as e:
         print(f"Fireworks (Dobby 70B) failed – {e}")
 
-    raise RuntimeError("All LLM providers failed.")
+    raise RuntimeError("LLM providers failed.")
