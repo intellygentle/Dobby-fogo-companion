@@ -12,7 +12,6 @@
    - **Twitter Sharing**: Allows users to tweet bot responses directly from the interface.
    - **Document Ingestion Pipeline**: Automatically processes and updates Markdown, PDF, DOCX, and TXT files in the `docs/` directory.
    - **Supabase Integration**: Uses a PostgreSQL database (via Supabase) to store document metadata and vectorized content.
-   - **Vercel Deployment**: Optimized for serverless deployment on Vercel, with a focus on scalability and low latency.
 
    ## Purpose
 
